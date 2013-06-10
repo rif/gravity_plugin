@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin>
+   <class>com.zedmedia.gravity.plugin.GravityPlugin</class>
+   <name>Gravity</name>
+   <description>The Gravity plugin handles credit operations for Gravity chat system.</description>
+   <author>Radu Ioan Fericean</author>
+   <version>1.0.0</version>
+   <date>5/10/2013</date>
+   <minServerVersion>3.8.0</minServerVersion>
+   <!-- Admin console entries -->
+    <adminconsole>
+        <tab id="tab-users">
+         <sidebar id="sidebar-users">
+            <item id="gravity-form" name="Gravity Properties" url="gravity-form.jsp" description="Settings for Gravity" />
+         </sidebar>
+      </tab>
+    </adminconsole>
+</plugin>
