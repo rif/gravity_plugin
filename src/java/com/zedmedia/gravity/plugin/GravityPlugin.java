@@ -40,6 +40,7 @@ public class GravityPlugin implements Plugin {
 		iqRouter.removeHandler(gravityHandler);
 		gravityHandler = null;
 		iqRouter = null;
+		interceptorManager.removeInterceptor(gravityInterceptor);
 		gravityInterceptor = null;
 		interceptorManager = null;
 	}
