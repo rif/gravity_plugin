@@ -28,6 +28,9 @@ public class GravityPacketInterceptor implements PacketInterceptor {
 	public void interceptPacket(Packet packet, Session session,
 			boolean incomming, boolean processed)
 			throws PacketRejectedException {
+		if (incomming && !processed){
+			Log.info(packet.toXML());
+		}
 		if (incomming && !processed && packet instanceof Message) {
 			Message m = (Message) packet;
 			if (m.getType() != Message.Type.chat) {
