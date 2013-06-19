@@ -1,5 +1,6 @@
 package com.zedmedia.gravity.plugin;
 
+import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;
 import org.jivesoftware.openfire.auth.UnauthorizedException;
 import org.jivesoftware.openfire.handler.IQHandler;
@@ -30,9 +31,11 @@ public class GravityIQHandler extends IQHandler {
 		IQ result = IQ.createResultIQ(packet);
 		IQ.Type type = packet.getType();
 		if (type.equals(IQ.Type.get)) {
-			result.setChildElement(NAME, NAMESPACE);
+			Element childResult = result.setChildElement(NAME, NAMESPACE);
 			// Do stuff you according to get and return the query result by
 			// adding to result
+
+			childResult.setText("{\"credit\":21.0}");
 			Log.info("TESTXXXXX get");
 
 		} else if (type.equals(IQ.Type.set)) {
