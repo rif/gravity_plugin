@@ -6,10 +6,15 @@ import org.jivesoftware.openfire.IQRouter;
 import org.jivesoftware.openfire.XMPPServer;
 import org.jivesoftware.openfire.container.Plugin;
 import org.jivesoftware.openfire.container.PluginManager;
+import org.jivesoftware.openfire.event.UserEventDispatcher;
 import org.jivesoftware.openfire.handler.IQHandler;
 import org.jivesoftware.openfire.interceptor.InterceptorManager;
 import org.jivesoftware.openfire.interceptor.PacketInterceptor;
 import org.jivesoftware.util.JiveGlobals;
+
+import com.zedmedia.gravity.plugin.handlers.GravityIQHandler;
+import com.zedmedia.gravity.plugin.handlers.GravityPacketInterceptor;
+import com.zedmedia.gravity.plugin.handlers.RegistrationUserEventListener;
 
 /**
  * Gravity (Message of the Day) plugin.
@@ -25,6 +30,7 @@ public class GravityPlugin implements Plugin {
 	private IQHandler gravityHandler;
 	private InterceptorManager interceptorManager;
 	private PacketInterceptor gravityInterceptor;
+	private RegistrationUserEventListener registrationListener;
 
 	public void initializePlugin(PluginManager manager, File pluginDirectory) {
 		gravityHandler = new GravityIQHandler();
@@ -33,7 +39,8 @@ public class GravityPlugin implements Plugin {
 		interceptorManager = InterceptorManager.getInstance();
 		gravityInterceptor = new GravityPacketInterceptor();
 		interceptorManager.addInterceptor(gravityInterceptor);
-
+		registrationListener = new RegistrationUserEventListener();
+		UserEventDispatcher.addListener(registrationListener);
 	}
 
 	public void destroyPlugin() {
@@ -41,8 +48,10 @@ public class GravityPlugin implements Plugin {
 		gravityHandler = null;
 		iqRouter = null;
 		interceptorManager.removeInterceptor(gravityInterceptor);
+		UserEventDispatcher.removeListener(registrationListener);
 		gravityInterceptor = null;
 		interceptorManager = null;
+		registrationListener = null;
 	}
 
 	public void setSubject(String message) {

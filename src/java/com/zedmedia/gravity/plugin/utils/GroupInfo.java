@@ -1,4 +1,4 @@
-package com.zedmedia.gravity.plugin;
+package com.zedmedia.gravity.plugin.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

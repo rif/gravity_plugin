@@ -1,4 +1,4 @@
-package com.zedmedia.gravity.plugin;
+package com.zedmedia.gravity.plugin.handlers;
 
 import org.dom4j.Element;
 import org.jivesoftware.openfire.IQHandlerInfo;

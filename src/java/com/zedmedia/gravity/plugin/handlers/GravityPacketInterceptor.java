@@ -1,4 +1,4 @@
-package com.zedmedia.gravity.plugin;
+package com.zedmedia.gravity.plugin.handlers;
 
 import java.util.List;
 
@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.xmpp.packet.Message;
 import org.xmpp.packet.Packet;
 import org.xmpp.packet.PacketExtension;
+
+import com.zedmedia.gravity.plugin.utils.GroupInfo;
 
 public class GravityPacketInterceptor implements PacketInterceptor {
 	private static final String ELEMENT_NAME = "gravity";
