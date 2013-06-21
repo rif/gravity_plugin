@@ -41,9 +41,10 @@ public class GravityIQHandler extends IQHandler {
 			// Do stuff you according to get and return the query result by
 			// adding to result
 
-			String credit = "-1";
+			String credit = "{\"credit\":-2}";
 			try {
-				credit = webClient.getCredit(packet.getFrom().toBareJID());
+				String jid = packet.getFrom().toBareJID();
+				credit = webClient.getCredit(jid.substring(0, jid.lastIndexOf("@")));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

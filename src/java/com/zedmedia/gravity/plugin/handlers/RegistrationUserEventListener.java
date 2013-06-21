@@ -16,11 +16,13 @@ public class RegistrationUserEventListener implements UserEventListener {
 	@Override
 	public void userCreated(User user, Map<String, Object> params) {
 		// TODO Find first and last name
+		System.out.println("Name: " + user.getName());
 		try {
-			webClient.register(user.getUsername(), user.getEmail(),
+			String response = webClient.register(user.getUsername(), user.getEmail(),
 					user.getName(), user.getName());
+			System.out.println("Response: " + response);
 		} catch (IOException e) {
-			// TODO Stop XMPP registration
+			System.out.println(e.getMessage());
 		}
 	}
 

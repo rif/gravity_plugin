@@ -38,31 +38,29 @@ public class WebService {
 	}
 
 	public String getCredit(String userName) throws IOException {
-		String result = "";
 		HttpGet httpGet = new HttpGet(
-				"http://dev.seeme.com:6018/credit/api/get_credit/?u=");
+				"http://dev.seeme.com:6018/credit/api/get_credit/?u=" + userName);
 		HttpResponse response = httpclient.execute(httpGet);
 		HttpEntity entity = response.getEntity();
-		result = EntityUtils.toString(entity);
-		return result;
+		return EntityUtils.toString(entity);
 	}
 
-	public void register(String username, String email, String firstName,
+	public String register(String username, String email, String firstName,
 			String lastName) throws IOException {
 		HttpPost httpPost = new HttpPost(
 				"http://dev.seeme.com:6018/credit/api/register_user/");
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("username", username));
+		nvps.add(new BasicNameValuePair("email", email));
 		nvps.add(new BasicNameValuePair("first_name", firstName));
 		nvps.add(new BasicNameValuePair("last_name", lastName));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvps));
-		httpclient.execute(httpPost);
-
-		// System.out.println(response.getStatusLine());
-		// HttpEntity entity = response.getEntity();
+		HttpResponse response = httpclient.execute(httpPost);
+		HttpEntity entity = response.getEntity();
+		return EntityUtils.toString(entity);
 	}
 
-	public void createTransaction(String userName) throws IOException {
+	public String createTransaction(String userName) throws IOException {
 		HttpPost httpPost = new HttpPost(
 				"http://dev.seeme.com:6018/credit/api/create_transaction/");
 		List<NameValuePair> nvps1 = new ArrayList<NameValuePair>();
@@ -70,8 +68,8 @@ public class WebService {
 		nvps1.add(new BasicNameValuePair("description", "from java"));
 		nvps1.add(new BasicNameValuePair("transaction_class", "award"));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvps1));
-		httpclient.execute(httpPost);
-		// System.out.println(response.getStatusLine());
-		// HttpEntity entity = response.getEntity();
+		HttpResponse response = httpclient.execute(httpPost);
+		HttpEntity entity = response.getEntity();
+		return EntityUtils.toString(entity);
 	}
 }
