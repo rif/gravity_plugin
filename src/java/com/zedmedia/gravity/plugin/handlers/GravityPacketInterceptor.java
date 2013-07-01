@@ -1,5 +1,6 @@
 package com.zedmedia.gravity.plugin.handlers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.jivesoftware.openfire.XMPPServer;
@@ -17,6 +18,7 @@ import org.xmpp.packet.Packet;
 import org.xmpp.packet.PacketExtension;
 
 import com.zedmedia.gravity.plugin.utils.GroupInfo;
+import com.zedmedia.gravity.plugin.utils.WebService;
 
 public class GravityPacketInterceptor implements PacketInterceptor {
 	private static final String ELEMENT_NAME = "gravity";
@@ -25,12 +27,13 @@ public class GravityPacketInterceptor implements PacketInterceptor {
 			.getLogger(GravityPacketInterceptor.class);
 	private RosterManager rosterManager = XMPPServer.getInstance()
 			.getRosterManager();
+	private WebService webClient = WebService.getInstance();
 
 	@Override
 	public void interceptPacket(Packet packet, Session session,
 			boolean incomming, boolean processed)
 			throws PacketRejectedException {
-		if (incomming && !processed){
+		if (incomming && !processed) {
 			Log.info(packet.toXML());
 		}
 		if (incomming && !processed && packet instanceof Message) {
@@ -51,6 +54,16 @@ public class GravityPacketInterceptor implements PacketInterceptor {
 					GroupInfo gi = new GroupInfo(groups.get(0));
 					if (gi.getFee() == expectedPrice) {
 						// create credit transaction
+						String desc = "Message to "
+								+ WebService.getUsernameFromJID(m.getTo());
+						try {
+							webClient.createTransaction(
+									WebService.getUsernameFromJID(m.getFrom()),
+									desc, WebService.TRANSACTION_CLASS_SPENDING,
+									gi.getFee());
+						} catch (IOException e) {							
+							e.printStackTrace();
+						}
 						return;
 					} else {
 						// park message and send warning
@@ -59,7 +72,8 @@ public class GravityPacketInterceptor implements PacketInterceptor {
 					// the from user is not placed in any group
 				}
 			} catch (UserNotFoundException e) {
-				// user roster was not found or the from user is not in the roster
+				// user roster was not found or the from user is not in the
+				// roster
 			}
 		}
 	}

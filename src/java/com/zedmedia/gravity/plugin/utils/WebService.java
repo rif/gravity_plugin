@@ -14,10 +14,22 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.xmpp.packet.JID;
 
 public class WebService {
 	private HttpClient httpclient = null;
 	private static WebService instance = null;
+
+	// user purchased site credit (balance increase)
+	public static final String TRANSACTION_CLASS_PURCASE = "purchase";
+	// award - user is granted site credit (balance increase)		
+	public static final String TRANSACTION_CLASS_AWARD = "award"; 
+	// spending - user spent site credit (balance decrease)
+	public static final String TRANSACTION_CLASS_SPENDING = "spending";
+	// withdrawal - user withdrew site credit (balance decrease)
+	public static final String TRANSACTION_CLASS_WITHDRAWAL = "withdrawal";
+	// adjustment - adjustment of site credit (increase or decrease)
+	public static final String TRANSACTION_CLASS_ADJUSTMENT = "adjustment";
 
 	private WebService() {
 		httpclient = new DefaultHttpClient();
@@ -39,7 +51,8 @@ public class WebService {
 
 	public String getCredit(String userName) throws IOException {
 		HttpGet httpGet = new HttpGet(
-				"http://dev.seeme.com:6018/credit/api/get_credit/?u=" + userName);
+				"http://dev.seeme.com:6018/credit/api/get_credit/?u="
+						+ userName);
 		HttpResponse response = httpclient.execute(httpGet);
 		HttpEntity entity = response.getEntity();
 		return EntityUtils.toString(entity);
@@ -60,16 +73,23 @@ public class WebService {
 		return EntityUtils.toString(entity);
 	}
 
-	public String createTransaction(String userName) throws IOException {
+	public String createTransaction(String userName, String description,
+			String transactionClass, double amount) throws IOException {
 		HttpPost httpPost = new HttpPost(
-				"http://dev.seeme.com:6018/credit/api/create_transaction/");
+				"http://dev.seeme.com:6018/credit/api/create_transaction/?u="
+						+ userName);
 		List<NameValuePair> nvps1 = new ArrayList<NameValuePair>();
-		nvps1.add(new BasicNameValuePair("amount", "3"));
-		nvps1.add(new BasicNameValuePair("description", "from java"));
-		nvps1.add(new BasicNameValuePair("transaction_class", "award"));
+		nvps1.add(new BasicNameValuePair("amount", "" + amount));
+		nvps1.add(new BasicNameValuePair("description", description));
+		nvps1.add(new BasicNameValuePair("transaction_class", transactionClass));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvps1));
 		HttpResponse response = httpclient.execute(httpPost);
 		HttpEntity entity = response.getEntity();
 		return EntityUtils.toString(entity);
+	}
+	
+	public static String getUsernameFromJID(JID jid) {
+		String bare = jid.toBareJID();
+		return bare.substring(0, bare.lastIndexOf("@"));
 	}
 }
